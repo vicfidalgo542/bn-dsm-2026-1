@@ -1,25 +1,20 @@
-import "dotenv/config";
-import { PrismaClient } from "../generated/prisma/client.ts";
+import { PrismaClient } from '../generated/prisma/default.js'
 
-
-// 1. Configuramos o log para emitir eventos do nível 'query'
+// Cria o cliente Prisma com opção de exibir no terminal
+// todas as consultas enviadas ao banco de dados
 const prisma = new PrismaClient({
- log: [
-   { emit: 'event', level: 'query' },
-   { emit: 'stdout', level: 'error' },
-   { emit: 'stdout', level: 'info' },
-   { emit: 'stdout', level: 'warn' },
- ],
-});
+  log: [{
+    emit: 'event',
+    level: 'query'
+  }]
+})
 
+// Exibe no terminal todas as instruções de consulta
+// enviadas ao servidor MongoDB
+prisma.$on('query', event => {
+  console.log('-'.repeat(80))
+  console.log(event.query)
+  if(event.params) console.log('PARAMS:', event.params)
+})
 
-// 2. Criamos o listener que intercepta o evento e exibe no console
-prisma.$on('query', (e) => {
- console.log('---');
- console.log('Query: ' + e.query);
- console.log('Params: ' + e.params);
- console.log('Duration: ' + e.duration + 'ms');
-});
-
-
-export { prisma };
+export default prisma

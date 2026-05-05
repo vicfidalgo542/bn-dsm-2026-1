@@ -46,13 +46,13 @@ model Fornecedor {
   cnpj              String        @unique
   email             String        @unique
   logradouro        String
-  num_imovel          String
+  num_casa          String
   complemento       String?
   bairro            String
   municipio         String
   uf                String
   cep               String
-  telefone           String
+  celular           String
   produtos          Produto[]     @relation(fields: [produto_ids], references: [id])
   produto_ids       String[]      @db.ObjectId
 }
